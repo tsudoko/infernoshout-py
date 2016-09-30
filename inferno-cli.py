@@ -16,18 +16,19 @@ import setproctitle
 
 class Shoutbox:
     base_url = ""
+    inferno_url = ""
     s = None
     lines = []
     read = collections.deque(maxlen=21)
 
-    def __init__(self, host, cookie={}):
-        self.base_url = "http://" + host + "/infernoshout.php"
+    def __init__(self, base_url, cookie={}, inferno_path="/infernoshout.php", base_path="/index.php"):
+        self.base_url = base_url
+        self.inferno_url = self.base_url + inferno_path
         self.s = requests.Session()
         self.s.headers.update({
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0",
-            "Accept-Language": "en-US,en;q=0.5", # XXX?
             "X-Requested-With": "XMLHttpRequest",
-            "Referer": "http://" + host + "/index.php",
+            "Referer": self.base_url + base_path,
         })
         if cookie:
             self.s.cookies.update(cookie)
@@ -71,7 +72,7 @@ class Shoutbox:
         }
 
         try:
-            r = self.s.get(self.base_url, params=params)
+            r = self.s.get(self.inferno_url, params=params)
             return r.text
         except requests.exceptions.ConnectionError as e:
             logging.warn("connection error: %s" % e)
@@ -136,11 +137,11 @@ def main():
 
     parser = argparse.ArgumentParser(description="Command line feed for Inferno Shoutbox")
     parser.add_argument("-b", "--backlog", action="store_true", help="Display the backlog after connecting")
-    parser.add_argument("host", help="Hostname of the forum")
+    parser.add_argument("url", help="Base URL of the forum")
     parser.add_argument("cookies", help="Cookies in the standard Cookie header format (RFC 6265, section 4.1.1)")
     args = parser.parse_args()
 
-    s = Shoutbox(args.host, dict_from_cookie_str(args.cookies))
+    s = Shoutbox(args.url, dict_from_cookie_str(args.cookies))
 
     if args.backlog:
         s.update()
