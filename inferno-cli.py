@@ -141,8 +141,13 @@ def main():
     args = parser.parse_args()
 
     s = Shoutbox(args.host, dict_from_cookie_str(args.cookies))
-    if not args.backlog:
+
+    if args.backlog:
+        s.update()
+        s.print_new()
+    else:
         s.initial_fetch()
+
     while True:
         time.sleep(5)
         s.update()
