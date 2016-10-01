@@ -89,15 +89,19 @@ class Shoutbox:
         l = self._parse(self._get()).rstrip("\n").split('\n')
         self.lines.extend(l)
 
-    def print_new(self):
+    def get_new(self):
+        ret = []
+        self.update()
+
         for i in self.lines:
             if i not in self.read:
-                print(i, flush=True)
+                ret.append(i)
                 self.read.append(i)
             else:
                 logging.debug("skipping line " + i)
 
         self.lines = []
+        return ret
 
     def send(self, msg):
         params = {
@@ -122,16 +126,16 @@ def main():
     s = Shoutbox(args.url, util.dict_from_cookie_str(args.cookies))
 
     if args.backlog:
-        s.update()
-        s.print_new()
+        for i in s.get_new():
+            print(i, flush=True)
     else:
         s.initial_fetch()
 
     while True:
         time.sleep(5)
         try:
-            s.update()
-            s.print_new()
+            for i in s.get_new():
+                print(i, flush=True)
         except requests.exceptions.ConnectionError as e:
             logging.warn("connection error: %s" % e)
 
