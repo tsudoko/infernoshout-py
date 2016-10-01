@@ -99,20 +99,13 @@ class Shoutbox:
         self.lines = []
 
 
-def valid_int(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False
-
-
 def atoi(string):
     s = []
     for i in string:
-        if valid_int(i):
+        try:
+            int(i)
             s.append(i)
-        else:
+        except ValueError:
             break
 
     return int(''.join(s))
