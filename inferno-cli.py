@@ -1,14 +1,33 @@
 #!/usr/bin/env python3
 import argparse
+import asyncio
 import logging
 import os
 import sys
-import time
 
 import requests
 import setproctitle
 
 import infernoshout
+
+@asyncio.coroutine
+def recv_loop(shoutbox):
+    while True:
+        yield from asyncio.sleep(5)
+        try:
+            for i in shoutbox.get_new():
+                print(i, flush=True)
+        except requests.exceptions.ConnectionError as e:
+            logging.warn("connection error: %s" % e)
+
+
+def send_input(shoutbox):
+    i = sys.stdin.readline().rstrip("\r\n")
+    if not i: # EOF
+        exit()
+
+    shoutbox.send(i)
+
 
 def main():
     logging.basicConfig(level=logging.INFO)
@@ -18,6 +37,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Command line feed for Inferno Shoutbox")
     parser.add_argument("-b", "--backlog", action="store_true", help="Display the backlog after connecting")
+    parser.add_argument("-n", "--no-input", action="store_true", help="Disable sending messages via stdin")
     parser.add_argument("url", help="Base URL of the forum")
     parser.add_argument("cookies", help="Cookies in the standard Cookie header format (RFC 6265, section 4.1.1)")
     args = parser.parse_args()
@@ -30,13 +50,12 @@ def main():
     else:
         s.initial_fetch()
 
-    while True:
-        time.sleep(5)
-        try:
-            for i in s.get_new():
-                print(i, flush=True)
-        except requests.exceptions.ConnectionError as e:
-            logging.warn("connection error: %s" % e)
+    loop = asyncio.get_event_loop()
+
+    if not args.no_input:
+        loop.add_reader(sys.stdin, lambda: send_input(s))
+
+    loop.run_until_complete(recv_loop(s))
 
 if __name__ == "__main__":
    main()
