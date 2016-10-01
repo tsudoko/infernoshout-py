@@ -21,7 +21,7 @@ def recv_loop(shoutbox):
             logging.warn("connection error: %s" % e)
 
 
-def send_input(shoutbox):
+def handle_input(shoutbox):
     i = sys.stdin.readline().rstrip("\r\n")
     if not i: # EOF
         exit()
@@ -53,7 +53,7 @@ def main():
     loop = asyncio.get_event_loop()
 
     if not args.no_input:
-        loop.add_reader(sys.stdin, lambda: send_input(s))
+        loop.add_reader(sys.stdin, lambda: handle_input(s))
 
     loop.run_until_complete(recv_loop(s))
 
