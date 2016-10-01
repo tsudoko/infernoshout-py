@@ -36,9 +36,13 @@ class Shoutbox:
     def _parse(self, html):
         MAGIC = "<<~!PARSE_SHOUT!~>>"
 
-        active_users = atoi(html)
-        logging.info("%d active users" % active_users)
-        html = html[len(str(active_users)):]
+        try:
+            active_users = atoi(html)
+            logging.info("%d active users" % active_users)
+            html = html[len(str(active_users)):]
+        except ValueError:
+            pass
+
         if not html.startswith(MAGIC):
             logging.warning("ignoring bogus html: %s" % html)
             return
