@@ -103,6 +103,13 @@ class Shoutbox:
 
         self.lines = []
 
+    def send(self, msg):
+        params = {
+            "action": "newshout"
+        }
+
+        s.post(self.inferno_url, params=params, data={"shout": msg})
+
 
 def main():
     logging.basicConfig(level=logging.INFO)
