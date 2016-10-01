@@ -102,4 +102,4 @@ class Shoutbox:
             "action": "newshout"
         }
 
-        s.post(self.inferno_url, params=params, data={"shout": msg})
+        return self.s.post(self.inferno_url, params=params, data={"shout": msg})
