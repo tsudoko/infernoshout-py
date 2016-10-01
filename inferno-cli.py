@@ -2,7 +2,6 @@
 import argparse
 import collections
 import datetime
-import http.cookies
 import logging
 import os
 import re
@@ -12,6 +11,8 @@ import time
 import bs4
 import requests
 import setproctitle
+
+import util
 
 
 class Shoutbox:
@@ -37,7 +38,7 @@ class Shoutbox:
         MAGIC = "<<~!PARSE_SHOUT!~>>"
 
         try:
-            active_users = atoi(html)
+            active_users = util.atoi(html)
             logging.info("%d active users" % active_users)
             html = html[len(str(active_users)):]
         except ValueError:
@@ -103,29 +104,6 @@ class Shoutbox:
         self.lines = []
 
 
-def atoi(string):
-    s = []
-    for i in string:
-        try:
-            int(i)
-            s.append(i)
-        except ValueError:
-            break
-
-    return int(''.join(s))
-
-
-def dict_from_cookie_str(cookie_str):
-    c = http.cookies.SimpleCookie()
-    d = dict()
-
-    c.load(cookie_str)
-    for k, m in c.items():
-        d[k] = m.value
-
-    return d
-
-
 def main():
     logging.basicConfig(level=logging.INFO)
 
@@ -138,7 +116,7 @@ def main():
     parser.add_argument("cookies", help="Cookies in the standard Cookie header format (RFC 6265, section 4.1.1)")
     args = parser.parse_args()
 
-    s = Shoutbox(args.url, dict_from_cookie_str(args.cookies))
+    s = Shoutbox(args.url, util.dict_from_cookie_str(args.cookies))
 
     if args.backlog:
         s.update()
