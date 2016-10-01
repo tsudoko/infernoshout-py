@@ -43,7 +43,7 @@ class Shoutbox:
             logging.warning("ignoring bogus html: %s" % html)
             return
 
-        html = html.lstrip(MAGIC)
+        html = html.replace(MAGIC, "", 1)
         h = bs4.BeautifulSoup(html)
 
         # put the full URL after the text inside the "a" tag
