@@ -76,12 +76,8 @@ class Shoutbox:
             "timestamp": datetime.datetime.now().strftime("%s200"),
         }
 
-        try:
-            r = self.s.get(self.inferno_url, params=params)
-            return r.text
-        except requests.exceptions.ConnectionError as e:
-            logging.warn("connection error: %s" % e)
-            return ""
+        r = self.s.get(self.inferno_url, params=params)
+        return r.text
 
     def initial_fetch(self):
         self.update()
@@ -133,8 +129,11 @@ def main():
 
     while True:
         time.sleep(5)
-        s.update()
-        s.print_new()
+        try:
+            s.update()
+            s.print_new()
+        except requests.exceptions.ConnectionError as e:
+            logging.warn("connection error: %s" % e)
 
 if __name__ == "__main__":
    main()
