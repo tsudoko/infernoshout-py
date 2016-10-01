@@ -83,6 +83,12 @@ class Shoutbox:
             logging.warn("connection error: %s" % e)
             return ""
 
+    def initial_fetch(self):
+        self.update()
+        for i in self.lines:
+            self.read.append(i)
+        self.lines = []
+
     def update(self):
         l = self._parse(self._get()).rstrip("\n").split('\n')
         self.lines.extend(l)
@@ -95,12 +101,6 @@ class Shoutbox:
             else:
                 logging.debug("skipping line " + i)
 
-        self.lines = []
-
-    def initial_fetch(self):
-        self.update()
-        for i in self.lines:
-            self.read.append(i)
         self.lines = []
 
 
