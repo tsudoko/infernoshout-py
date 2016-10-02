@@ -10,6 +10,7 @@ import setproctitle
 
 import infernoshout
 
+
 @asyncio.coroutine
 def recv_loop(shoutbox):
     while True:
@@ -23,7 +24,7 @@ def recv_loop(shoutbox):
 
 def handle_input(shoutbox):
     i = sys.stdin.readline().rstrip("\r\n")
-    if not i: # EOF
+    if not i:  # EOF
         exit()
 
     shoutbox.send(i)
@@ -58,4 +59,4 @@ def main():
     loop.run_until_complete(recv_loop(s))
 
 if __name__ == "__main__":
-   main()
+    main()
