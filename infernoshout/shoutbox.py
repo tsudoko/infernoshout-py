@@ -80,8 +80,11 @@ class Shoutbox:
         self.lines = []
 
     def update(self):
-        l = self._parse(self._get()).rstrip("\n").split('\n')
-        self.lines.extend(l)
+        l = self._parse(self._get())
+
+        if l is not None:
+            l = l.rstrip("\n").split('\n')
+            self.lines.extend(l)
 
     def get_new(self):
         ret = []
