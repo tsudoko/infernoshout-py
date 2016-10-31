@@ -67,7 +67,6 @@ class Shoutbox:
     def _get(self):
         params = {
             "action": "getshouts",
-            "timestamp": datetime.datetime.now().strftime("%s200"),
         }
 
         r = self.s.get(self.inferno_url, params=params)
