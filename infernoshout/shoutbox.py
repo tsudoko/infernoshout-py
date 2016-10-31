@@ -73,6 +73,7 @@ class Shoutbox:
         return r.text
 
     def update(self):
+        """Download messages and store them in self.lines."""
         l = self._parse(self._get())
 
         if l is not None:
@@ -80,12 +81,14 @@ class Shoutbox:
             self.lines.extend(l)
 
     def initial_fetch(self):
+        """Download messages and mark them all as read."""
         self.update()
         for i in self.lines:
             self.read.append(i)
         self.lines = []
 
     def get_new(self):
+        """Download messages and return new ones."""
         ret = []
         self.update()
 
@@ -100,6 +103,7 @@ class Shoutbox:
         return ret
 
     def send(self, msg):
+        """Send a message to the shoutbox."""
         params = {
             "action": "newshout"
         }
