@@ -72,18 +72,18 @@ class Shoutbox:
         r = self.s.get(self.inferno_url, params=params)
         return r.text
 
-    def initial_fetch(self):
-        self.update()
-        for i in self.lines:
-            self.read.append(i)
-        self.lines = []
-
     def update(self):
         l = self._parse(self._get())
 
         if l is not None:
             l = l.rstrip("\n").split('\n')
             self.lines.extend(l)
+
+    def initial_fetch(self):
+        self.update()
+        for i in self.lines:
+            self.read.append(i)
+        self.lines = []
 
     def get_new(self):
         ret = []
