@@ -16,7 +16,7 @@ class Shoutbox:
     lines = []
     read = collections.deque(maxlen=21)
 
-    def __init__(self, base_url, cookie={}, inferno_path="/infernoshout.php", base_path="/index.php"):
+    def __init__(self, base_url, cookies={}, inferno_path="/infernoshout.php", base_path="/index.php"):
         self.base_url = base_url
         self.inferno_url = self.base_url + inferno_path
         self.s = requests.Session()
@@ -25,8 +25,8 @@ class Shoutbox:
             "X-Requested-With": "XMLHttpRequest",
             "Referer": self.base_url + base_path,
         })
-        if cookie:
-            self.s.cookies.update(cookie)
+        if cookies:
+            self.s.cookies.update(cookies)
 
     def _parse(self, html):
         MAGIC = "<<~!PARSE_SHOUT!~>>"
