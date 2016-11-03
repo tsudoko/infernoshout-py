@@ -80,12 +80,6 @@ class Shoutbox:
             l = l.rstrip("\n").split('\n')
             self.lines.extend(l)
 
-    def mark_all_read(self):
-        """Mark all exisitng messages as read."""
-        for i in self.lines:
-            self.read.append(i)
-        self.lines = []
-
     def get_new(self):
         """Return unread messages. All returned messages are marked as read."""
         ret = []

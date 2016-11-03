@@ -46,13 +46,12 @@ def main():
 
     s = infernoshout.Shoutbox(args.url, infernoshout.utils.dict_from_cookie_str(args.cookies))
 
+    s.update()
     if args.backlog:
-        s.update()
         for i in s.get_new():
             print(i, flush=True)
     else:
-        s.update()
-        s.mark_all_read()
+        s.get_new()
 
     loop = asyncio.get_event_loop()
 
