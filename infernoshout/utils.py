@@ -7,7 +7,7 @@ class UniqueBuffer:
     The actual buffer is not limited in length, the `buflen` argument is used
     to specify the amount of items guaranteed to be unique."""
 
-    def __init__(self, buflen=21):
+    def __init__(self, buflen):
         self.items = []
         self.old = collections.deque(maxlen=buflen)
 
