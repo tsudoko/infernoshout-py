@@ -13,8 +13,7 @@ class Shoutbox:
     base_url = ""
     inferno_url = ""
     s = None
-    lines = []
-    read = collections.deque(maxlen=21)
+    buf = utils.UniqueBuffer(buflen=21)
 
     def __init__(self, base_url, cookies={}, inferno_path="/infernoshout.php", base_path="/index.php"):
         self.base_url = base_url
@@ -73,26 +72,12 @@ class Shoutbox:
         return r.text
 
     def update(self):
-        """Download messages and store them in self.lines."""
+        """Download messages and store them in self.buf."""
         l = self._parse(self._get())
 
         if l is not None:
             l = l.rstrip("\n").split('\n')
-            self.lines.extend(l)
-
-    def get_new(self):
-        """Return unread messages. All returned messages are marked as read."""
-        ret = []
-
-        for i in self.lines:
-            if i not in self.read:
-                ret.append(i)
-                self.read.append(i)
-            else:
-                logging.debug("skipping line " + i)
-
-        self.lines = []
-        return ret
+            self.buf.items.extend(l)
 
     def send(self, msg):
         """Send a message to the shoutbox."""

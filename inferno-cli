@@ -17,7 +17,7 @@ def recv_loop(shoutbox):
         yield from asyncio.sleep(5)
         try:
             shoutbox.update()
-            for i in shoutbox.get_new():
+            for i in shoutbox.buf.pop_all():
                 print(i, flush=True)
         except requests.exceptions.ConnectionError as e:
             logging.warn("connection error: %s" % e)
@@ -48,10 +48,10 @@ def main():
 
     s.update()
     if args.backlog:
-        for i in s.get_new():
+        for i in s.buf.pop_all():
             print(i, flush=True)
     else:
-        s.get_new()
+        s.buf.pop_all()
 
     loop = asyncio.get_event_loop()
 

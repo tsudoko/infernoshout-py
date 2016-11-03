@@ -1,4 +1,27 @@
+import collections
 import http.cookies
+import logging
+
+class UniqueBuffer:
+    """A simple deduplicating buffer. To add new items, manipulate self.items.
+    The actual buffer is not limited in length, the `buflen` argument is used
+    to specify the amount of items guaranteed to be unique."""
+
+    def __init__(self, buflen=21):
+        self.items = []
+        self.old = collections.deque(maxlen=buflen)
+
+    def pop_all(self):
+        """Return all items and remove them from the buffer."""
+        ret = []
+
+        for i in self.items:
+            if i not in self.old:
+                ret.append(i)
+                self.old.append(i)
+
+        self.items = []
+        return ret
 
 
 def atoi(string):
