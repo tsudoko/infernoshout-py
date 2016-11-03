@@ -16,6 +16,7 @@ def recv_loop(shoutbox):
     while True:
         yield from asyncio.sleep(5)
         try:
+            shoutbox.update()
             for i in shoutbox.get_new():
                 print(i, flush=True)
         except requests.exceptions.ConnectionError as e:
@@ -46,10 +47,12 @@ def main():
     s = infernoshout.Shoutbox(args.url, infernoshout.utils.dict_from_cookie_str(args.cookies))
 
     if args.backlog:
+        s.update()
         for i in s.get_new():
             print(i, flush=True)
     else:
-        s.initial_fetch()
+        s.update()
+        s.mark_all_read()
 
     loop = asyncio.get_event_loop()
 
