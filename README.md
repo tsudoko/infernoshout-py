@@ -7,7 +7,7 @@ a simple command line client avaiable as well.
 Installation
 ------------
 
-Python 3.4 or later is needed. `pip` can be used to install the module:
+Python 3.4 or later is needed. The module can be installed with `pip`:
 
     pip install git+https://github.com/tsudoko/infernoshout-py
 
