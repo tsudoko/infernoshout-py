@@ -10,14 +10,10 @@ from . import utils
 
 
 class Shoutbox:
-    base_url = ""
-    inferno_url = ""
-    s = None
-    buf = utils.UniqueBuffer(buflen=21)
-
     def __init__(self, base_url, cookies={}, inferno_path="/infernoshout.php", base_path="/index.php"):
         self.base_url = base_url
         self.inferno_url = self.base_url + inferno_path
+        self.buf = utils.UniqueBuffer(buflen=21)
         self.s = requests.Session()
         self.s.headers.update({
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; rv:45.0) Gecko/20100101 Firefox/45.0",
