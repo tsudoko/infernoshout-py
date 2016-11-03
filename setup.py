@@ -14,8 +14,8 @@ setup(
     scripts=["inferno-cli"],
     classifiers=[
         "License :: Public Domain",
-	"Programming Language :: Python :: 3 :: Only",
-	"Topic :: Communications :: Chat",
-	"Topic :: Utilities",
+        "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Communications :: Chat",
+        "Topic :: Utilities",
     ]
 )
