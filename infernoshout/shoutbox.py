@@ -13,6 +13,7 @@ class Shoutbox:
     def __init__(self, base_url, cookies={}, inferno_path="/infernoshout.php", base_path="/index.php"):
         self.base_url = base_url
         self.inferno_url = self.base_url + inferno_path
+        self.active_users = 0
         self.buf = utils.UniqueBuffer(buflen=21)
         self.s = requests.Session()
         self.s.headers.update({
@@ -27,9 +28,8 @@ class Shoutbox:
         MAGIC = "<<~!PARSE_SHOUT!~>>"
 
         try:
-            active_users = utils.atoi(html)
-            logging.info("%d active users" % active_users)
-            html = html[len(str(active_users)):]
+            self.active_users = utils.atoi(html)
+            html = html[len(str(self.active_users)):]
         except ValueError:
             pass
 
