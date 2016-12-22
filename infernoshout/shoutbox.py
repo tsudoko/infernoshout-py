@@ -48,7 +48,8 @@ class Shoutbox:
             if a['href'] == "#":
                 continue
 
-            a.string.replace_with("%s (%s)" % (a.string, a['href']))
+            if a.string != a['href']:
+                a.string.replace_with("%s (%s)" % (a.string, a['href']))
 
         for br in h.find_all("br"):
             br.string = "\n"
