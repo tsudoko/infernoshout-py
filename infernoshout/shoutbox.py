@@ -4,9 +4,22 @@ import logging
 import re
 
 import bs4
+import dateparser
 import requests
 
 from . import utils
+
+
+class Message:
+    def __init__(self, _raw="", timestamp=None):
+        self.timestamp = timestamp
+        self._raw = _raw
+    def __eq__(self, other):
+        return self.timestamp == other.timestamp and self._raw == other._raw
+    def __ne__(self, other):
+        return self.timestamp != other.timestamp or self._raw != other._raw
+    def __str__(self):
+        return self._raw
 
 
 class Shoutbox:
@@ -26,6 +39,7 @@ class Shoutbox:
 
     def _parse(self, html):
         MAGIC = "<<~!PARSE_SHOUT!~>>"
+        timestamp_re = re.compile("^\[[^\]]*\] ")
 
         try:
             self.active_users = utils.atoi(html)
@@ -54,11 +68,19 @@ class Shoutbox:
         for br in h.find_all("br"):
             br.string = "\n"
 
-        chat = h.get_text()
+        chat = h.get_text().rstrip("\n").split("\n")
+        lines = []
 
-        # remove timestamps - they're relative, and thus they make read lines appear as unread when the day changes
-        chat = re.sub("^\[[^\]]*\] ", "", chat, flags=re.MULTILINE)
-        return chat
+        for line in chat:
+            ts_match = timestamp_re.match(line)
+            ts = None
+
+            if ts_match:
+                ts = dateparser.parse(ts_match.group(0))
+
+            lines.append(Message(timestamp=ts, _raw=timestamp_re.sub("", line)))
+
+        return lines
 
     def _get(self):
         params = {
@@ -73,7 +95,6 @@ class Shoutbox:
         l = self._parse(self._get())
 
         if l is not None:
-            l = l.rstrip("\n").split('\n')
             self.buf.items.extend(l)
 
     def send(self, msg):

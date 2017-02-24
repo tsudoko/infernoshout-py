@@ -3,11 +3,12 @@ from setuptools import setup
 
 setup(
     name="infernoshout",
-    version="0.1",
+    version="0.2",
     license="Public Domain",
     packages=["infernoshout"],
     install_requires=[
         "beautifulsoup4",
+        "dateparser",
         "requests",
         "setproctitle",
     ],
