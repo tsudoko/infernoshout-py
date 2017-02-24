@@ -20,7 +20,7 @@ def recv_loop(shoutbox):
             logging.info("%d active users" % shoutbox.active_users)
             for i in shoutbox.buf.pop_all():
                 print(i, flush=True)
-        except requests.exceptions.ConnectionError as e:
+        except (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout) as e:
             logging.warn("connection error: %s" % e)
 
 
