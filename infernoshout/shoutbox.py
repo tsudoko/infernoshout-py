@@ -14,7 +14,7 @@ class Shoutbox:
         self.base_url = base_url
         self.inferno_url = self.base_url + inferno_path
         self.active_users = 0
-        self.buf = utils.UniqueBuffer(buflen=21)
+        self.buf = utils.UniqueBuffer(capacity=21)
         self.s = requests.Session()
         self.s.headers.update({
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; rv:51.0) Gecko/20100101 Firefox/51.0",

@@ -4,12 +4,12 @@ import logging
 
 class UniqueBuffer:
     """A simple deduplicating buffer. To add new items, manipulate self.items.
-    The actual buffer is not limited in length, the `buflen` argument is used
+    The actual buffer is not limited in length, the `capacity` argument is used
     to specify the amount of items guaranteed to be unique."""
 
-    def __init__(self, buflen):
+    def __init__(self, capacity):
         self.items = []
-        self.old = collections.deque(maxlen=buflen)
+        self.old = collections.deque(maxlen=capacity)
 
     def pop_all(self):
         """Return all items and remove them from the buffer."""
