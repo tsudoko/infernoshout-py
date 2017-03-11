@@ -2,7 +2,7 @@ infernoshout-py
 ===============
 
 Python module for interacting with the [Inferno Shoutbox for MyBB][0]. There's
-a simple command line client avaiable as well.
+a simple command line client available as well.
 
 Installation
 ------------
