@@ -75,7 +75,7 @@ class Shoutbox:
             return int(r.text)
         except ValueError:
             logging.warning("ignoring bogus time: %s" % r.text)
-            return None
+            return 0
 
     def _get(self):
         params = {
