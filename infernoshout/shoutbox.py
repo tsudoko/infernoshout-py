@@ -19,10 +19,11 @@ class Shoutbox:
         self.buf = utils.UniqueBuffer(capacity=21)
         self.s = requests.Session()
         self.s.headers.update({
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; rv:51.0) Gecko/20100101 Firefox/51.0",
             "X-Requested-With": "XMLHttpRequest",
             "Referer": self.base_url + base_path,
         })
+        if ua:
+            self.s.headers['User-Agent'] = ua
         if cookies:
             self.s.cookies.update(cookies)
 
