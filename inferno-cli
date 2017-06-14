@@ -41,11 +41,12 @@ def main():
     parser = argparse.ArgumentParser(description="Command line feed for Inferno Shoutbox")
     parser.add_argument("-b", "--backlog", action="store_true", help="Display the backlog after connecting")
     parser.add_argument("-n", "--no-input", action="store_true", help="Disable sending messages via stdin")
+    parser.add_argument("-A", "--disable-anus", action="store_true", help="Don't use the \"openanus\" feature (last activity timestamp, broken on some forums)")
     parser.add_argument("url", help="Base URL of the forum")
     parser.add_argument("cookies", help="Cookies in the standard Cookie header format (RFC 6265, section 4.1.1)")
     args = parser.parse_args()
 
-    s = infernoshout.Shoutbox(args.url, infernoshout.utils.dict_from_cookie_str(args.cookies))
+    s = infernoshout.Shoutbox(args.url, infernoshout.utils.dict_from_cookie_str(args.cookies), use_anus=not args.disable_anus)
 
     s.update()
     if args.backlog:

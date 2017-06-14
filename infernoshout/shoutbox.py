@@ -10,10 +10,12 @@ from . import utils
 
 
 class Shoutbox:
-    def __init__(self, base_url, cookies={}, inferno_path="/infernoshout.php", base_path="/index.php"):
+    def __init__(self, base_url, cookies={}, inferno_path="/infernoshout.php", base_path="/index.php", ua=None, use_anus=True):
         self.base_url = base_url
         self.inferno_url = self.base_url + inferno_path
         self.active_users = 0
+        self.use_anus = use_anus
+        self.last_active = 0
         self.buf = utils.UniqueBuffer(capacity=21)
         self.s = requests.Session()
         self.s.headers.update({
@@ -60,6 +62,20 @@ class Shoutbox:
         chat = re.sub("^\[[^\]]*\] ", "", chat, flags=re.MULTILINE)
         return chat
 
+    def _check_active(self):
+        params = {
+            "action": "openanus",
+        }
+
+        r = self.s.get(self.inferno_url, params=params)
+        logging.info("last activity: %s" % r.text)
+
+        try:
+            return int(r.text)
+        except ValueError:
+            logging.warning("ignoring bogus time: %s" % r.text)
+            return None
+
     def _get(self):
         params = {
             "action": "getshouts",
@@ -70,6 +86,15 @@ class Shoutbox:
 
     def update(self):
         """Download messages and store them in self.buf."""
+        if self.use_anus:
+            time = self._check_active()
+            if time <= self.last_active:
+                 return
+            else:
+               self.last_active = time
+
+            logging.info("getting more")
+
         l = self._parse(self._get())
 
         if l is not None:
